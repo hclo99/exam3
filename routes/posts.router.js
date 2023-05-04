@@ -4,6 +4,7 @@ const { Posts } = require('../models');
 
 const createNewPost = async (req, res) => {
   //게시글 작성
+  const { title, content } = req.body
   const createdata = await Posts.create({ title, content });
   return res.json({
     id: createdata.id,
@@ -23,17 +24,17 @@ const getAllPosts = async (req, res) => {
 
 const updatePost = async (req, res) => {
   // 게시글 수정
-  const { Id } = req.params;
+  const { postId } = req.params;
   const { title, content } = req.body;
 
   await Posts.update(
     { title, content },
-    { where: { id : Id } }
+    { where: { id : postId } }
   );
 
   const updatepost = await Posts.findOne({
     attributes: ['id', 'title', 'content'],
-    where: { id : Id }
+    where: { id : postId }
   })
 
   return res.json(updatepost);
@@ -41,8 +42,8 @@ const updatePost = async (req, res) => {
 
 const deletePostById = async (req, res) => {
   // 게시글 삭제
-  const { Id } = req.params;
-  await Posts.destroy({ where : { id : Id } });
+  const { postId } = req.params;
+  await Posts.destroy({ where : { id : postId } });
   return res.json({ message : "success" });
 };
 
